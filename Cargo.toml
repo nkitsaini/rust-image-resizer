@@ -8,6 +8,16 @@ publish = false
 
 [dependencies]
 shuttle-runtime = "0.16.0"
-axum = "0.6.18"
+axum = { version = "0.6.18", features = ["macros"] }
 shuttle-axum = "0.16.0"
 tokio = "1.28.1"
+image = "0.24.6"
+fast_image_resize = "2.7.3"
+anyhow = "1.0.71"
+serde = { version = "1.0.163", features = ["derive"] }
+serde_json = "1.0.96"
+tracing-subscriber = "0.3.17"
+tracing = "0.1.37"
+
+[dev-dependencies]
+axum-macros = "0.3.7"
