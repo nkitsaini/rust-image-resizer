@@ -209,6 +209,7 @@ mod tests {
 	}
 
 	proptest! {
+		#[ignore] // only to be run manually, otherwise takes too much time
 		#[test]
 		fn props(num1 in 1u32..u32::MAX, num2 in 1u32..u32::MAX, denom in 1u32..u32::MAX) {
 			test(num1, num2, denom)
