@@ -1,14 +1,14 @@
 
 use axum::{
     body::Bytes,
-    extract::{DefaultBodyLimit, Query},
+    extract::{DefaultBodyLimit, Query, RawQuery},
     http::StatusCode,
     response::IntoResponse,
     routing::{get, post},
     Router,
 };
 
-use crate::resizer:: {self, ImageResizeParams};
+use crate::{resizer:: {self, ImageResizeParams}, query_extractor::QueryProxyExtrator};
 use tokio::task;
 
 
@@ -31,13 +31,12 @@ Response body will contain output image bytes in jpeg format
 
 
 #[axum::debug_handler]
-async fn image_resizer(params: Query<ImageResizeParams>, body: Bytes) -> axum::response::Response {
+async fn image_resizer(params: QueryProxyExtrator<ImageResizeParams>, body: Bytes) -> axum::response::Response {
     let params = params.0;
     match task::spawn(async { resizer::reszier(body, params) }).await {
         Ok(x) => match x {
             Ok(x) => (StatusCode::OK, x).into_response(),
             Err(e) => (StatusCode::INTERNAL_SERVER_ERROR, format!("Error: {e:?}")).into_response()
-            
         },
         Err(_e) => ( StatusCode::INTERNAL_SERVER_ERROR, "Can't start a new thread",) .into_response()
         
